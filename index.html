@@ -16,6 +16,9 @@
             --primary-hover: #0056b3;
             --danger-bg: rgba(220, 53, 69, 0.1);
             --danger-border: #dc3545;
+            --info-bg: rgba(0, 123, 255, 0.05);
+            --info-border: #007bff;
+            --help-card-bg: #f8f9fa;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -25,6 +28,8 @@
                 --text-color: #e0e0e0;
                 --subtext-color: #aaaaaa;
                 --border-color: #333333;
+                --info-bg: rgba(0, 123, 255, 0.1);
+                --help-card-bg: #181818;
             }
         }
 
@@ -47,7 +52,7 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 30px;
-            max-width: 600px; /* Збільшено ширину */
+            max-width: 600px;
             width: 100%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             text-align: center;
@@ -225,41 +230,71 @@
             line-height: 1.4;
         }
 
-        .info-section {
+        /* Описи версій (Перша рамочка) */
+        .version-info-box {
             margin-top: 25px;
-            padding-top: 20px;
+            padding: 16px;
+            background-color: var(--info-bg);
+            border-left: 4px solid var(--info-border);
             border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .version-info-box p {
+            margin: 6px 0;
+        }
+
+        .version-info-box p:first-child {
+            margin-top: 0;
+        }
+
+        .version-info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Інструкція з усунення проблем (Друга рамочка) */
+        .troubleshooting-box {
+            margin-top: 20px;
+            padding: 18px 20px;
+            background-color: var(--help-card-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 14px;
             text-align: left;
             font-size: 0.85rem;
             line-height: 1.5;
+        }
+
+        .troubleshooting-box h3 {
+            font-size: 0.95rem;
+            margin-top: 0;
+            margin-bottom: 10px;
             color: var(--text-color);
         }
 
-        .info-section h3 {
-            font-size: 0.95rem;
-            margin-top: 15px;
-            margin-bottom: 8px;
-        }
-
-        .info-section p {
-            margin: 6px 0;
-        }
-
-        .info-section ul {
-            margin: 6px 0;
+        .troubleshooting-box ul {
+            margin: 0;
             padding-left: 18px;
         }
 
-        .info-section li {
-            margin-bottom: 4px;
+        .troubleshooting-box li {
+            margin-bottom: 6px;
         }
 
-        .info-section a {
+        .troubleshooting-box li:last-child {
+            margin-bottom: 0;
+        }
+
+        .troubleshooting-box a {
             color: var(--primary-color);
             text-decoration: none;
         }
 
-        .info-section a:hover {
+        .troubleshooting-box a:hover {
             text-decoration: underline;
         }
 
@@ -328,11 +363,15 @@
             💡 Якщо прошивка не починається, затисніть кнопку <strong>BOOT</strong> на пристрої під час підключення USB.
         </p>
 
-        <div class="info-section">
+        <!-- Рамочка 1: Опис версій -->
+        <div class="version-info-box">
             <p><strong>JAAM</strong> — стабільна релізна версія прошивки.</p>
             <p><strong>JAAM Beta</strong> — тестова версія прошивки. Містить функції, що перебувають у розробці. Підтримуються чіпи ESP32, ESP32-S3, ESP32-C3.</p>
+        </div>
 
-            <h3>Якщо пристрій не відображається у списку портів:</h3>
+        <!-- Рамочка 2: Пошук пристрою / Драйвери -->
+        <div class="troubleshooting-box">
+            <h3>Якщо ви не обрали порт через те, що не бачили ваш пристрій у списку, спробуйте наступні кроки:</h3>
             <ul>
                 <li>Переконайтеся, що пристрій підключений до цього комп'ютера (до того, де запущено браузер, що відображає цей веб-сайт).</li>
                 <li>Більшість пристроїв мають світлодіод. Якщо ваш має такий, переконайтеся, що він увімкнений.</li>
