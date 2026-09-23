@@ -51,8 +51,8 @@
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 30px;
-            max-width: 680px; /* Трохи розширено картку */
+            padding: 24px;
+            max-width: 560px; /* Трохи збільшено ширину з 520px до 560px */
             width: 100%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             text-align: center;
@@ -61,11 +61,11 @@
 
         h1 {
             margin-top: 0;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
 
         .device-image-container {
-            margin: 20px 0;
+            margin: 15px 0;
             display: flex;
             justify-content: center;
             width: 100%;
@@ -73,11 +73,11 @@
 
         .device-image {
             width: 100%;
-            max-width: 100%; /* Фото розтягується на всю доступну ширину картки */
+            max-width: 100%;
             height: auto;
-            aspect-ratio: 16 / 9; /* Прямокутний формат замість 1/1. За потреби приберіть цей рядок */
+            aspect-ratio: 16 / 9;
             object-fit: cover;
-            border-radius: 16px !important;
+            border-radius: 14px !important;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border-color);
             display: block;
@@ -229,17 +229,10 @@
             margin: 0;
         }
 
-        .help-note {
-            margin-top: 15px;
-            font-size: 0.8rem;
-            color: var(--subtext-color);
-            line-height: 1.4;
-        }
-
         /* Описи версій (Перша рамочка) */
         .version-info-box {
             margin-top: 25px;
-            padding: 16px;
+            padding: 14px 16px;
             background-color: var(--info-bg);
             border-left: 4px solid var(--info-border);
             border-top: 1px solid var(--border-color);
@@ -247,7 +240,7 @@
             border-bottom: 1px solid var(--border-color);
             border-radius: 12px;
             text-align: left;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             line-height: 1.5;
         }
 
@@ -265,8 +258,8 @@
 
         /* Інструкція з усунення проблем (Друга рамочка) */
         .troubleshooting-box {
-            margin-top: 20px;
-            padding: 18px 20px;
+            margin-top: 18px;
+            padding: 16px 18px;
             background-color: var(--help-card-bg);
             border: 1px dashed var(--border-color);
             border-radius: 14px;
@@ -276,7 +269,7 @@
         }
 
         .troubleshooting-box h3 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             margin-top: 0;
             margin-bottom: 10px;
             color: var(--text-color);
@@ -364,10 +357,6 @@
                 </div>
             </esp-web-install-button>
         </div>
-
-        <p class="help-note">
-            💡 Якщо прошивка не починається, затисніть кнопку <strong>BOOT</strong> на пристрої під час підключення USB.
-        </p>
 
         <!-- Рамочка 1: Опис версій -->
         <div class="version-info-box">
