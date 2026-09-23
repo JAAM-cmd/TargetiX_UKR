@@ -55,14 +55,12 @@
             font-size: 1.8rem;
         }
 
-        /* Контейнер для фото */
         .device-image-container {
             margin: 20px 0;
             display: flex;
             justify-content: center;
         }
 
-        /* Квадратне фото з закругленням кутів */
         .device-image {
             width: 100%;
             max-width: 300px;
@@ -102,7 +100,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Стилі для Changelog */
         .changelog-box {
             margin-top: 15px;
             padding: 14px 16px;
@@ -211,12 +208,10 @@
     <div class="flasher-card">
         <h1>Прошивка пристрою</h1>
         
-        <!-- Фото пристрою -->
         <div class="device-image-container">
             <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
         </div>
 
-        <!-- Вибір версії прошивки -->
         <div class="form-group">
             <label for="release-select">Виберіть версію прошивки:</label>
             <select id="release-select">
@@ -224,19 +219,17 @@
                 <option value="manifest_3.6.json">Версія 3.6 (Стабільна)</option>
             </select>
 
-            <!-- Блок для відображення списку змін (Changelog) -->
             <div id="changelog-container" class="changelog-box">
                 <div class="changelog-header">
                     <span class="changelog-title">Список змін</span>
                     <span id="changelog-badge" class="badge"></span>
                 </div>
                 <ul id="changelog-list" class="changelog-list">
-                    <!-- Пункти заповнюються через JS -->
+                    <!-- Заповнюється з changelog.json -->
                 </ul>
             </div>
         </div>
 
-        <!-- Кнопка установки -->
         <div class="install-container">
             <esp-web-install-button id="install-btn" manifest="manifest_3.6.1-b1.json">
                 <button slot="activate" class="install-button" type="button">Встановити</button>
@@ -256,49 +249,36 @@
         </div>
     </div>
 
-    <!-- Підключення офіційного скрипта ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
 
     <script>
-        // Структура даних із даними про зміни
-        const changelogs = {
-            'manifest_3.6.1-b1.json': {
-                type: 'beta',
-                label: 'Beta',
-                changes: [
-                    'Оновлено алгоритм стабілізації Wi-Fi з'єднання',
-                    'Додано підтримку нових цифрових датчиків',
-                    'Виправлено помилку з підключенням до прихованих мереж',
-                    'Експериментальна підтримка протоколу WebSocket'
-                ]
-            },
-            'manifest_3.6.json': {
-                type: 'stable',
-                label: 'Стабільна',
-                changes: [
-                    'Офіційний стабільний реліз',
-                    'Оптимізовано використання оперативної памʼяті (RAM)',
-                    'Покращено швидкість відгуку веб-інтерфейсу',
-                    'Виправлено витік памʼяті при тривалій роботі'
-                ]
-            }
-        };
-
         const selectEl = document.getElementById('release-select');
         const installBtn = document.getElementById('install-btn');
         const changelogList = document.getElementById('changelog-list');
         const changelogBadge = document.getElementById('changelog-badge');
+
+        let changelogs = {};
+
+        // Динамічне завантаження changelog.json
+        async function loadChangelogs() {
+            try {
+                const response = await fetch('changelog.json');
+                changelogs = await response.json();
+                updateChangelog();
+            } catch (error) {
+                console.error('Помилка завантаження changelog.json:', error);
+                changelogList.innerHTML = '<li>Не вдалося завантажити список змін</li>';
+            }
+        }
 
         function updateChangelog() {
             const selectedValue = selectEl.value;
             const data = changelogs[selectedValue];
 
             if (data) {
-                // Оновлюємо маркер стану (Beta / Stable)
                 changelogBadge.textContent = data.label;
                 changelogBadge.className = `badge ${data.type}`;
 
-                // Наповнюємо список елементів <li>
                 changelogList.innerHTML = '';
                 data.changes.forEach(item => {
                     const li = document.createElement('li');
@@ -306,15 +286,14 @@
                     changelogList.appendChild(li);
                 });
 
-                // Оновлюємо атрибут manifest для Web Tools кнопки
                 installBtn.setAttribute('manifest', selectedValue);
             }
         }
 
         selectEl.addEventListener('change', updateChangelog);
 
-        // Початкова ініціалізація при завантаженні
-        updateChangelog();
+        // Старт завантаження при відкритті сторінки
+        loadChangelogs();
     </script>
 </body>
 </html>
