@@ -44,7 +44,7 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 450px;
             width: 100%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             text-align: center;
@@ -57,15 +57,18 @@
 
         .device-image-container {
             margin: 20px 0;
+            display: flex;
+            justify-content: center;
         }
 
-        /* Загруглення та оформлення фото */
+        /* Квадратне фото із закругленими кутами */
         .device-image {
             width: 100%;
-            max-height: 260px;
-            object-fit: cover;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            max-width: 280px;          /* Розмір квадрата */
+            aspect-ratio: 1 / 1;        /* Формат 1:1 */
+            object-fit: cover;          /* Зберігає пропорції внутрішньої картинки */
+            border-radius: 20px;        /* Закруглення країв */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             border: 1px solid var(--border-color);
             display: block;
         }
@@ -140,7 +143,7 @@
     <div class="flasher-card">
         <h1>Прошивка пристрою</h1>
         
-        <!-- Фото із закругленими кутами -->
+        <!-- Квадратне фото пристрою -->
         <div class="device-image-container">
             <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
         </div>
