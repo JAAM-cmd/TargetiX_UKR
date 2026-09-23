@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP Web Flasher</title>
+    <title>JAAM Flasher</title>
     
+    <link rel="stylesheet" href="styles.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
     <style>
         :root {
             --bg-color: #f4f6f8;
@@ -21,6 +30,7 @@
             --help-card-bg: #f8f9fa;
         }
 
+        [data-theme="dark"],
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #121212;
@@ -52,16 +62,47 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 24px;
-            max-width: 560px; /* Трохи збільшено ширину з 520px до 560px */
+            max-width: 560px;
             width: 100%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             text-align: center;
             box-sizing: border-box;
+            position: relative;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         h1 {
-            margin-top: 0;
+            margin: 0;
             font-size: 1.6rem;
+            color: var(--text-color);
+        }
+
+        .control-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .control-button:hover {
+            background-color: var(--border-color);
+        }
+
+        .control-button svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-color);
         }
 
         .device-image-container {
@@ -92,6 +133,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--text-color);
         }
 
         select {
@@ -118,6 +160,7 @@
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
         }
 
+        /* Список змін (Changelog Box) */
         .changelog-box {
             margin-top: 15px;
             padding: 14px 16px;
@@ -297,6 +340,13 @@
             text-decoration: underline;
         }
 
+        .download-icon {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
         footer {
             margin-top: 20px;
             font-size: 0.8rem;
@@ -314,19 +364,29 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="flasher-card">
-        <h1>Прошивка пристрою</h1>
-        
+        <div class="header-container">
+            <h1>JAAM Flasher</h1>
+            <div class="header-buttons">
+                <button class="control-button theme-toggle" onclick="toggleTheme()" title="Перемкнути тему">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12,18C11.11,18 10.26,17.8 9.5,17.46C11.56,16.06 13,13.72 13,11A6.8,6.8 0 0,0 9.5,4.54C10.26,4.2 11.11,4 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
         <div class="device-image-container">
-            <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
+            <img class="device-image" src="flag_map.png" alt="Карта України у кольорах національного прапора" id="device-img">
         </div>
 
         <div class="form-group">
             <label for="release-select">Виберіть версію прошивки:</label>
-            <select id="release-select">
-                <option value="">Завантаження версій...</option>
+            <select id="release-select" class="form-control">
+                <option value="">Завантаження релізів...</option>
             </select>
 
             <div id="changelog-container" class="changelog-box">
@@ -341,18 +401,20 @@
         </div>
 
         <div class="install-container">
-            <esp-web-install-button id="install-btn">
-                <button slot="activate" class="install-button" id="activate-btn" type="button">Встановити</button>
+            <esp-web-install-button id="stable-install-btn">
+                <button slot="activate" class="install-button" id="stable-btn-text" type="button">Встановити</button>
                 
                 <div slot="unsupported">
                     <div class="alert-box danger">
-                        <p><strong>Помилка:</strong> Ваш браузер не підтримує Web Serial API. Скористайтеся Chrome, Edge або Opera на ПК.</p>
+                        <p><strong>Ваш браузер не підтримується!</strong></p>
+                        <p>Спробуйте встановити через Chrome, Edge або Opera.</p>
                     </div>
                 </div>
                 
                 <div slot="not-allowed">
                     <div class="alert-box danger">
-                        <p><strong>Помилка:</strong> Прошивка доступна лише через протокол HTTPS або на localhost.</p>
+                        <p><strong>Встановлення через HTTP заборонено!</strong></p>
+                        <p>Спробуйте встановити через HTTPS.</p>
                     </div>
                 </div>
             </esp-web-install-button>
@@ -375,8 +437,24 @@
                     Переконайтеся, що встановлені правильні драйвери. Нижче наведено драйвери для загальних мікросхем, що використовуються в пристроях ESP:
                     <ul>
                         <li><strong>CP2102 драйвери:</strong> <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">Windows & Mac</a></li>
-                        <li><strong>CH342, CH343, CH9102 драйвери:</strong> <a href="http://www.wch-ic.com/downloads/CH343SER_EXE.html" target="_blank" rel="noopener">Windows</a>, <a href="http://www.wch-ic.com/downloads/CH341SER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a> (завантаження за допомогою синьої кнопки з іконкою)</li>
-                        <li><strong>CH340, CH341 драйвери:</strong> <a href="http://www.wch-ic.com/downloads/CH341SER_EXE.html" target="_blank" rel="noopener">Windows</a>, <a href="http://www.wch-ic.com/downloads/CH341SER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a> (завантаження за допомогою синьої кнопки з іконкою)</li>
+                        <li>
+                            <strong>CH342, CH343, CH9102 драйвери:</strong> 
+                            <a href="https://www.wch.cn/downloads/CH343SER_ZIP.html" target="_blank" rel="noopener">Windows</a>, 
+                            <a href="https://www.wch.cn/downloads/CH34XSER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a> 
+                            (завантаження за допомогою синьої кнопки з 
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 510.322 510.322" xml:space="preserve" class="download-icon">
+                                <g><path style="fill:currentColor;" d="M429.064,159.505c0-0.151,0.086-1.057,0.086-1.057c0-75.282-61.261-136.521-136.543-136.521c-52.244,0-97.867,30.587-120.753,76.339c-11.67-9.081-25.108-15.682-40.273-15.682c-37.166,0-67.387,30.199-67.387,67.387c0,0,0.453,3.279,0.798,5.824C27.05,168.716,0,203.423,0,244.516c0,25.389,9.901,49.268,27.848,67.171c17.968,17.99,41.804,27.869,67.193,27.869h130.244v46.83h-54.66l97.694,102.008l95.602-102.008h-54.66v-46.83H419.25c50.174,0,91.072-40.855,91.072-90.986C510.3,201.827,474.428,164.639,429.064,159.505z M419.207,312.744H309.26v-55.545h-83.975v55.545H95.019c-18.184,0-35.333-7.075-48.211-19.996c-12.878-12.878-19.953-30.005-19.953-48.189c0-32.68,23.21-60.808,55.264-66.956l12.511-2.394l-2.092-14.431l-1.488-10.785c0-22.347,18.184-40.51,40.531-40.51c13.266,0,25.691,6.514,33.305,17.408l15.229,21.873l8.52-25.303c15.013-44.652,56.796-74.656,103.906-74.656c60.506,0,109.709,49.203,109.709,109.644l-1.337,25.712l15.121,0.302l3.149-0.086c35.419,0,64.216,28.797,64.216,64.216C483.401,283.969,454.604,312.744,419.207,312.744z"></path></g>
+                            </svg> іконкою)
+                        </li>
+                        <li>
+                            <strong>CH340, CH341 драйвери:</strong> 
+                            <a href="https://www.wch.cn/downloads/CH341SER_ZIP.html" target="_blank" rel="noopener">Windows</a>, 
+                            <a href="https://www.wch.cn/downloads/CH341SER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a> 
+                            (завантаження за допомогою синьої кнопки з 
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 510.322 510.322" xml:space="preserve" class="download-icon">
+                                <g><path style="fill:currentColor;" d="M429.064,159.505c0-0.151,0.086-1.057,0.086-1.057c0-75.282-61.261-136.521-136.543-136.521c-52.244,0-97.867,30.587-120.753,76.339c-11.67-9.081-25.108-15.682-40.273-15.682c-37.166,0-67.387,30.199-67.387,67.387c0,0,0.453,3.279,0.798,5.824C27.05,168.716,0,203.423,0,244.516c0,25.389,9.901,49.268,27.848,67.171c17.968,17.99,41.804,27.869,67.193,27.869h130.244v46.83h-54.66l97.694,102.008l95.602-102.008h-54.66v-46.83H419.25c50.174,0,91.072-40.855,91.072-90.986C510.3,201.827,474.428,164.639,429.064,159.505z M419.207,312.744H309.26v-55.545h-83.975v55.545H95.019c-18.184,0-35.333-7.075-48.211-19.996c-12.878-12.878-19.953-30.005-19.953-48.189c0-32.68,23.21-60.808,55.264-66.956l12.511-2.394l-2.092-14.431l-1.488-10.785c0-22.347,18.184-40.51,40.531-40.51c13.266,0,25.691,6.514,33.305,17.408l15.229,21.873l8.52-25.303c15.013-44.652,56.796-74.656,103.906-74.656c60.506,0,109.709,49.203,109.709,109.644l-1.337,25.712l15.121,0.302l3.149-0.086c35.419,0,64.216,28.797,64.216,64.216C483.401,283.969,454.604,312.744,419.207,312.744z"></path></g>
+                            </svg> іконкою)
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -389,70 +467,9 @@
     </footer>
 
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-
-    <script>
-        const selectEl = document.getElementById('release-select');
-        const installBtn = document.getElementById('install-btn');
-        const activateBtn = document.getElementById('activate-btn');
-        const changelogList = document.getElementById('changelog-list');
-        const changelogBadge = document.getElementById('changelog-badge');
-        const changelogBox = document.getElementById('changelog-container');
-
-        let changelogs = {};
-
-        async function loadChangelogs() {
-            try {
-                const response = await fetch('changelog.json');
-                changelogs = await response.json();
-                
-                selectEl.innerHTML = '';
-                
-                Object.keys(changelogs).forEach(manifest => {
-                    const opt = document.createElement('option');
-                    opt.value = manifest;
-                    opt.textContent = changelogs[manifest].version || manifest;
-                    selectEl.appendChild(opt);
-                });
-
-                updateChangelog();
-            } catch (error) {
-                console.error('Помилка завантаження changelog.json:', error);
-                changelogList.innerHTML = '<li>Не вдалося завантажити список змін</li>';
-            }
-        }
-
-        function updateChangelog() {
-            const selectedValue = selectEl.value;
-            const data = changelogs[selectedValue];
-
-            changelogBox.classList.add('fade');
-
-            setTimeout(() => {
-                if (data) {
-                    const versionName = data.version || selectedValue;
-                    
-                    changelogBadge.textContent = data.label || data.type;
-                    changelogBadge.className = `badge ${data.type}`;
-
-                    changelogList.innerHTML = '';
-                    if (Array.isArray(data.changes)) {
-                        data.changes.forEach(item => {
-                            const li = document.createElement('li');
-                            li.textContent = item;
-                            changelogList.appendChild(li);
-                        });
-                    }
-
-                    installBtn.setAttribute('manifest', selectedValue);
-                    activateBtn.textContent = `Встановити JAAM ${versionName}`;
-                }
-                changelogBox.classList.remove('fade');
-            }, 150);
-        }
-
-        selectEl.addEventListener('change', updateChangelog);
-
-        loadChangelogs();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://jaam.net.ua/static/jaam_v2.js"></script>
+    <script src="flasher.js"></script>
 </body>
+
 </html>
