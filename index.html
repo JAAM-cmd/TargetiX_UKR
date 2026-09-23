@@ -225,6 +225,44 @@
             line-height: 1.4;
         }
 
+        .info-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: left;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        .info-section h3 {
+            font-size: 0.95rem;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .info-section p {
+            margin: 6px 0;
+        }
+
+        .info-section ul {
+            margin: 6px 0;
+            padding-left: 18px;
+        }
+
+        .info-section li {
+            margin-bottom: 4px;
+        }
+
+        .info-section a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .info-section a:hover {
+            text-decoration: underline;
+        }
+
         footer {
             margin-top: 20px;
             font-size: 0.8rem;
@@ -289,6 +327,26 @@
         <p class="help-note">
             💡 Якщо прошивка не починається, затисніть кнопку <strong>BOOT</strong> на пристрої під час підключення USB.
         </p>
+
+        <div class="info-section">
+            <p><strong>JAAM</strong> — стабільна релізна версія прошивки.</p>
+            <p><strong>JAAM Beta</strong> — тестова версія прошивки. Містить функції, що перебувають у розробці. Підтримуються чіпи ESP32, ESP32-S3, ESP32-C3.</p>
+
+            <h3>Якщо пристрій не відображається у списку портів:</h3>
+            <ul>
+                <li>Переконайтеся, що пристрій підключений до цього комп'ютера (до того, де запущено браузер, що відображає цей веб-сайт).</li>
+                <li>Більшість пристроїв мають світлодіод. Якщо ваш має такий, переконайтеся, що він увімкнений.</li>
+                <li>Переконайтесь, що USB-кабель, яким пристрій підключено до комп'ютера, є кабелем передачі даних, а не лише кабелем для живлення.</li>
+                <li>
+                    Переконайтеся, що встановлені правильні драйвери. Нижче наведено драйвери для загальних мікросхем, що використовуються в пристроях ESP:
+                    <ul>
+                        <li><strong>CP2102 драйвери:</strong> <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">Windows & Mac</a></li>
+                        <li><strong>CH342, CH343, CH9102 драйвери:</strong> <a href="http://www.wch-ic.com/downloads/CH343SER_EXE.html" target="_blank" rel="noopener">Windows</a>, <a href="http://www.wch-ic.com/downloads/CH341SER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a> (завантаження за допомогою синьої кнопки з іконкою)</li>
+                        <li><strong>CH340, CH341 драйвери:</strong> <a href="http://www.wch-ic.com/downloads/CH341SER_EXE.html" target="_blank" rel="noopener">Windows</a>, <a href="http://www.wch-ic.com/downloads/CH341SER_MAC_ZIP.html" target="_blank" rel="noopener">Mac</a> (завантаження за допомогою синьої кнопки з іконкою)</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <footer>
@@ -307,7 +365,7 @@
 
         let changelogs = {};
 
-        // Завантаженняchangelog.json та динамічна генерація option
+        // Завантаження changelog.json та динамічна генерація option
         async function loadChangelogs() {
             try {
                 const response = await fetch('changelog.json');
