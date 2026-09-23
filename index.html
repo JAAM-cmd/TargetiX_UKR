@@ -1,48 +1,112 @@
 <!DOCTYPE html>
-<html lang='uk' data-theme="dark">
-
+<html lang="uk">
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Моя Прошивка ESP32</title>
-    <link rel='stylesheet' href='styles.css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP Web Flasher</title>
+    
     <style>
-        .flasher-container {
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --border-color: #dddddd;
+            --danger-bg: #dc354520;
+            --danger-border: #dc3545;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #e0e0e0;
+                --border-color: #333333;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .flasher-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             text-align: center;
         }
 
-        .device-img {
-            width: 100%;
-            height: auto;
-            max-width: 500px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            object-fit: cover;
+        h1 {
+            margin-top: 0;
+            font-size: 1.8rem;
         }
 
-        .install-section {
-            margin: 30px 0;
+        /* Блок та стилі для зображення пристрою */
+        .device-image-container {
+            margin: 20px 0;
+        }
+
+        .device-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .install-container {
+            margin-top: 25px;
         }
 
         .install-button {
-            display: inline-block;
-            background: #007bff;
+            background: var(--primary-color);
             color: white;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
             font-weight: 600;
-            text-decoration: none;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
         }
 
         .install-button:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+            background: var(--primary-hover);
         }
 
         esp-web-install-button {
@@ -50,142 +114,74 @@
         }
 
         .alert-box {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 6px;
+            padding: 12px 15px;
             margin: 15px 0;
             text-align: left;
-        }
-
-        .alert-box.primary {
-            background-color: #007bff20;
-            border-color: #007bff;
-        }
-
-        .alert-box.warning {
-            background-color: #e2a90b20;
-            border-color: #e2a90b;
+            font-size: 0.9rem;
         }
 
         .alert-box.danger {
-            background-color: #dc354520;
-            border-color: #dc3545;
+            background-color: var(--danger-bg);
+            border: 1px solid var(--danger-border);
         }
 
-        .alert-box p, .alert-box li {
-            color: #e0e0e0;
-            margin: 5px 0;
-        }
-
-        .alert-box ul, .alert-box ol {
-            margin: 10px 0;
-            padding-left: 25px;
-        }
-
-        .alert-box a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .alert-box a:hover {
-            text-decoration: underline;
-        }
-
-        .form-group {
-            text-align: left;
-            max-width: 500px;
-            margin: 0 auto 20px auto;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            background: #2a2a2a;
-            color: #fff;
-            font-size: 16px;
-            margin-top: 5px;
+        .alert-box p {
+            margin: 0;
         }
     </style>
 </head>
-
 <body>
-    <div class='container'>
-        <div class="header-container">
-            <h1>Прошивка пристрою ESP32</h1>
+
+    <div class="flasher-card">
+        <h1>Прошивка пристрою</h1>
+        
+        <!-- Блок із фотографією пристрою -->
+        <div class="device-image-container">
+            <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
         </div>
 
-        <div class='flasher-container'>
-            <!-- Фото пристрою -->
-            <div class='install-section'>
-                <img class='device-img' src='device.png' alt="Фото пристрою ESP32">
-            </div>
+        <!-- Вибір версії прошивки -->
+        <div class="form-group">
+            <label for="release-select">Виберіть версію прошивки:</label>
+            <select id="release-select">
+                <option value="manifest.json">Версія 1.0.0 (Стабільна)</option>
+                <!-- Додавайте ваші версії сюди -->
+            </select>
+        </div>
 
-            <div class='install-section'>
-                <div class="form-group">
-                    <label for="release-select">Виберіть версію прошивки:</label>
-                    <select id="release-select" class="form-control" onchange="updateManifest()">
-                        <option value="manifest.json">3.6 (Реліз)</option>
-                        <option value="manifest-beta.json">3.6.1-b1 (Beta)</option>
-                    </select>
+        <!-- Кнопка прошивки -->
+        <div class="install-container">
+            <esp-web-install-button id="install-btn" manifest="manifest.json">
+                <button slot="activate" class="install-button" type="button">Встановити</button>
+                
+                <div slot="unsupported">
+                    <div class="alert-box danger">
+                        <p><strong>Помилка:</strong> Ваш браузер не підтримує Web Serial API. Скористайтеся Chrome, Edge або Opera на ПК.</p>
+                    </div>
                 </div>
-
-                <!-- Кнопка встановлення -->
-                <div id="install-buttons" style="margin: 20px 0;">
-                    <esp-web-install-button id="esp-btn" manifest="manifest.json">
-                        <button class='install-button' type='button' slot="activate">Встановити</button>
-                        <div slot="unsupported">
-                            <div class='alert-box danger'>
-                                <p><strong>Ваш браузер не підтримується!</strong></p>
-                                <p>Будь ласка, відкрийте сторінку в Google Chrome, Microsoft Edge або Opera.</p>
-                            </div>
-                        </div>
-                        <div slot="not-allowed">
-                            <div class='alert-box danger'>
-                                <p><strong>Увага: прошивка вимагає безпечного з'єднання (HTTPS)!</strong></p>
-                                <p>Запустіть сайт через HTTPS або локальний сервер (http://localhost).</p>
-                            </div>
-                        </div>
-                    </esp-web-install-button>
+                
+                <div slot="not-allowed">
+                    <div class="alert-box danger">
+                        <p><strong>Помилка:</strong> Прошивка доступна лише через протокол HTTPS або на localhost.</p>
+                    </div>
                 </div>
-            </div>
-
-            <div class='alert-box primary'>
-                <ul>
-                    <li><b>Версія 3.6</b> — стабільна релізна версія прошивки для пристрою на ESP32.</li>
-                    <li><b>Версія 3.6.1-b1 (Beta)</b> — тестова версія із новими експериментальними функціями.</li>
-                </ul>
-            </div>
-
-            <div class='alert-box warning'>
-                <p><strong>Якщо пристрій не відображається у списку портів:</strong></p>
-                <ol>
-                    <li>Переконайтеся, що USB-кабель підтримує передачу даних (а не тільки зарядку).</li>
-                    <li>Перевірте, чи горить індикатор живлення на вашій платі ESP32.</li>
-                    <li>Встановіть відповідні драйвери для USB-UART перетворювача:
-                        <ul>
-                            <li>Драйвер CP2102: <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank">Завантажити для Win/Mac</a></li>
-                            <li>Драйвер CH340 / CH341: <a href="https://www.wch.cn/downloads/CH341SER_ZIP.html" target="_blank">Завантажити для Windows</a></li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
+            </esp-web-install-button>
         </div>
     </div>
 
-    <!-- Скрипт для інсталяції ESP Web Tools -->
+    <!-- Підключення офіційного скрипта ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-    
-    <!-- Скрипт перемикання маніфестів -->
+
     <script>
-        function updateManifest() {
-            const select = document.getElementById('release-select');
-            const espBtn = document.getElementById('esp-btn');
-            espBtn.setAttribute('manifest', select.value);
-        }
+        const selectEl = document.getElementById('release-select');
+        const installBtn = document.getElementById('install-btn');
+
+        selectEl.addEventListener('change', (event) => {
+            if (event.target.value) {
+                installBtn.setAttribute('manifest', event.target.value);
+            }
+        });
     </script>
 </body>
-
 </html>
