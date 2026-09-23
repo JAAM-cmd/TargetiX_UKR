@@ -42,9 +42,9 @@
         .flasher-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 30px;
-            max-width: 450px;
+            max-width: 480px;
             width: 100%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             text-align: center;
@@ -55,20 +55,21 @@
             font-size: 1.8rem;
         }
 
+        /* Контейнер для фото */
         .device-image-container {
             margin: 20px 0;
             display: flex;
             justify-content: center;
         }
 
-        /* Квадратне фото із закругленими кутами */
+        /* Квадратное фото с гарантированным закруглением углов */
         .device-image {
             width: 100%;
-            max-width: 280px;          /* Розмір квадрата */
-            aspect-ratio: 1 / 1;        /* Формат 1:1 */
-            object-fit: cover;          /* Зберігає пропорції внутрішньої картинки */
-            border-radius: 20px;        /* Закруглення країв */
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            max-width: 300px;             /* Размер квадратного фото */
+            aspect-ratio: 1 / 1;           /* Пропорции 1 к 1 */
+            object-fit: cover;             /* Картинка заполнит квадрат без искажений */
+            border-radius: 24px !important;/* Закругление углов */
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border-color);
             display: block;
         }
@@ -86,8 +87,8 @@
 
         select {
             width: 100%;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             background-color: var(--card-bg);
             color: var(--text-color);
@@ -102,8 +103,8 @@
         .install-button {
             background: var(--primary-color);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 12px 30px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             border: none;
@@ -121,7 +122,7 @@
         }
 
         .alert-box {
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px 15px;
             margin: 15px 0;
             text-align: left;
@@ -143,12 +144,12 @@
     <div class="flasher-card">
         <h1>Прошивка пристрою</h1>
         
-        <!-- Квадратне фото пристрою -->
+        <!-- Квадратное фото с закругленными углами -->
         <div class="device-image-container">
             <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
         </div>
 
-        <!-- Вибір версії прошивки -->
+        <!-- Выбор версии прошивки -->
         <div class="form-group">
             <label for="release-select">Виберіть версію прошивки:</label>
             <select id="release-select">
@@ -156,7 +157,7 @@
             </select>
         </div>
 
-        <!-- Кнопка прошивки -->
+        <!-- Кнопка установки -->
         <div class="install-container">
             <esp-web-install-button id="install-btn" manifest="manifest.json">
                 <button slot="activate" class="install-button" type="button">Встановити</button>
@@ -176,6 +177,7 @@
         </div>
     </div>
 
+    <!-- Подключение официального скрипта ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
 
     <script>
