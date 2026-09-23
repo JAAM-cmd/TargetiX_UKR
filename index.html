@@ -149,18 +149,18 @@
             <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
         </div>
 
-        <!-- Выбор версии прошивки -->
+        <!-- Выбор версии прошивки (Бета поставлена выше) -->
         <div class="form-group">
             <label for="release-select">Виберіть версію прошивки:</label>
             <select id="release-select">
-                <option value="manifest_3.6.json">Версія 3.6 (Стабільна)</option>
                 <option value="manifest_3.6.1-b1.json">Версія 3.6.1-b1 (Beta)</option>
+                <option value="manifest_3.6.json">Версія 3.6 (Стабільна)</option>
             </select>
         </div>
 
         <!-- Кнопка установки -->
         <div class="install-container">
-            <esp-web-install-button id="install-btn" manifest="manifest_3.6.json">
+            <esp-web-install-button id="install-btn" manifest="manifest_3.6.1-b1.json">
                 <button slot="activate" class="install-button" type="button">Встановити</button>
                 
                 <div slot="unsupported">
@@ -185,7 +185,6 @@
         const selectEl = document.getElementById('release-select');
         const installBtn = document.getElementById('install-btn');
 
-        // Обработчик переключения манифеста в зависимости от версии
         selectEl.addEventListener('change', (event) => {
             if (event.target.value) {
                 installBtn.setAttribute('manifest', event.target.value);
