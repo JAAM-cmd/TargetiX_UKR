@@ -62,13 +62,13 @@
             justify-content: center;
         }
 
-        /* Квадратное фото с гарантированным закруглением углов */
+        /* Квадратное фото с закруглением углов */
         .device-image {
             width: 100%;
-            max-width: 300px;             /* Размер квадратного фото */
-            aspect-ratio: 1 / 1;           /* Пропорции 1 к 1 */
-            object-fit: cover;             /* Картинка заполнит квадрат без искажений */
-            border-radius: 24px !important;/* Закругление углов */
+            max-width: 300px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 24px !important;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border-color);
             display: block;
@@ -153,13 +153,14 @@
         <div class="form-group">
             <label for="release-select">Виберіть версію прошивки:</label>
             <select id="release-select">
-                <option value="manifest.json">Версія 1.0.0 (Стабільна)</option>
+                <option value="manifest_3.6.json">Версія 3.6 (Стабільна)</option>
+                <option value="manifest_3.6.1-b1.json">Версія 3.6.1-b1 (Beta)</option>
             </select>
         </div>
 
         <!-- Кнопка установки -->
         <div class="install-container">
-            <esp-web-install-button id="install-btn" manifest="manifest.json">
+            <esp-web-install-button id="install-btn" manifest="manifest_3.6.json">
                 <button slot="activate" class="install-button" type="button">Встановити</button>
                 
                 <div slot="unsupported">
@@ -184,6 +185,7 @@
         const selectEl = document.getElementById('release-select');
         const installBtn = document.getElementById('install-btn');
 
+        // Обработчик переключения манифеста в зависимости от версии
         selectEl.addEventListener('change', (event) => {
             if (event.target.value) {
                 installBtn.setAttribute('manifest', event.target.value);
