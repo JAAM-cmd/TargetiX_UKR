@@ -1,6 +1,7 @@
 {
-  "name": "ESP Web Flasher (Beta)",
+  "name": "TargetiX JAAM (Beta)",
   "version": "3.6.1-b1",
+  "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32",
