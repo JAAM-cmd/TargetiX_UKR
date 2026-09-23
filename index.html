@@ -10,10 +10,10 @@
             --bg-color: #f4f6f8;
             --card-bg: #ffffff;
             --text-color: #333333;
+            --border-color: #e0e0e0;
             --primary-color: #007bff;
             --primary-hover: #0056b3;
-            --border-color: #e0e0e0;
-            --danger-bg: #dc354520;
+            --danger-bg: rgba(220, 53, 69, 0.1);
             --danger-border: #dc3545;
         }
 
@@ -62,7 +62,7 @@
             justify-content: center;
         }
 
-        /* Квадратное фото с закруглением углов */
+        /* Квадратне фото з закругленням кутів */
         .device-image {
             width: 100%;
             max-width: 300px;
@@ -94,6 +94,71 @@
             color: var(--text-color);
             font-size: 1rem;
             box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Стилі для Changelog */
+        .changelog-box {
+            margin-top: 15px;
+            padding: 14px 16px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .changelog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .changelog-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .badge.beta {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #d97706;
+            border: 1px solid #f59e0b;
+        }
+
+        .badge.stable {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .changelog-list {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 0.85rem;
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .changelog-list li {
+            margin-bottom: 4px;
+        }
+
+        .changelog-list li:last-child {
+            margin-bottom: 0;
         }
 
         .install-container {
@@ -109,6 +174,7 @@
             font-weight: 600;
             border: none;
             cursor: pointer;
+            width: 100%;
             transition: background 0.2s ease, transform 0.1s ease;
         }
 
@@ -118,7 +184,8 @@
         }
 
         esp-web-install-button {
-            display: inline-block;
+            display: block;
+            width: 100%;
         }
 
         .alert-box {
@@ -144,18 +211,29 @@
     <div class="flasher-card">
         <h1>Прошивка пристрою</h1>
         
-        <!-- Квадратное фото с закругленными углами -->
+        <!-- Фото пристрою -->
         <div class="device-image-container">
             <img src="device.png" alt="Фото пристрою" class="device-image" id="device-img">
         </div>
 
-        <!-- Выбор версии прошивки (Бета поставлена выше) -->
+        <!-- Вибір версії прошивки -->
         <div class="form-group">
             <label for="release-select">Виберіть версію прошивки:</label>
             <select id="release-select">
                 <option value="manifest_3.6.1-b1.json">Версія 3.6.1-b1 (Beta)</option>
                 <option value="manifest_3.6.json">Версія 3.6 (Стабільна)</option>
             </select>
+
+            <!-- Блок для відображення списку змін (Changelog) -->
+            <div id="changelog-container" class="changelog-box">
+                <div class="changelog-header">
+                    <span class="changelog-title">Список змін</span>
+                    <span id="changelog-badge" class="badge"></span>
+                </div>
+                <ul id="changelog-list" class="changelog-list">
+                    <!-- Пункти заповнюються через JS -->
+                </ul>
+            </div>
         </div>
 
         <!-- Кнопка установки -->
@@ -178,18 +256,65 @@
         </div>
     </div>
 
-    <!-- Подключение официального скрипта ESP Web Tools -->
+    <!-- Підключення офіційного скрипта ESP Web Tools -->
     <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
 
     <script>
+        // Структура даних із даними про зміни
+        const changelogs = {
+            'manifest_3.6.1-b1.json': {
+                type: 'beta',
+                label: 'Beta',
+                changes: [
+                    'Оновлено алгоритм стабілізації Wi-Fi з'єднання',
+                    'Додано підтримку нових цифрових датчиків',
+                    'Виправлено помилку з підключенням до прихованих мереж',
+                    'Експериментальна підтримка протоколу WebSocket'
+                ]
+            },
+            'manifest_3.6.json': {
+                type: 'stable',
+                label: 'Стабільна',
+                changes: [
+                    'Офіційний стабільний реліз',
+                    'Оптимізовано використання оперативної памʼяті (RAM)',
+                    'Покращено швидкість відгуку веб-інтерфейсу',
+                    'Виправлено витік памʼяті при тривалій роботі'
+                ]
+            }
+        };
+
         const selectEl = document.getElementById('release-select');
         const installBtn = document.getElementById('install-btn');
+        const changelogList = document.getElementById('changelog-list');
+        const changelogBadge = document.getElementById('changelog-badge');
 
-        selectEl.addEventListener('change', (event) => {
-            if (event.target.value) {
-                installBtn.setAttribute('manifest', event.target.value);
+        function updateChangelog() {
+            const selectedValue = selectEl.value;
+            const data = changelogs[selectedValue];
+
+            if (data) {
+                // Оновлюємо маркер стану (Beta / Stable)
+                changelogBadge.textContent = data.label;
+                changelogBadge.className = `badge ${data.type}`;
+
+                // Наповнюємо список елементів <li>
+                changelogList.innerHTML = '';
+                data.changes.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    changelogList.appendChild(li);
+                });
+
+                // Оновлюємо атрибут manifest для Web Tools кнопки
+                installBtn.setAttribute('manifest', selectedValue);
             }
-        });
+        }
+
+        selectEl.addEventListener('change', updateChangelog);
+
+        // Початкова ініціалізація при завантаженні
+        updateChangelog();
     </script>
 </body>
 </html>
