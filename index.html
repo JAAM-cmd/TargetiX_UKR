@@ -47,7 +47,7 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 30px;
-            max-width: 480px;
+            max-width: 600px; /* Збільшено ширину */
             width: 100%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             text-align: center;
@@ -365,7 +365,6 @@
 
         let changelogs = {};
 
-        // Завантаження changelog.json та динамічна генерація option
         async function loadChangelogs() {
             try {
                 const response = await fetch('changelog.json');
